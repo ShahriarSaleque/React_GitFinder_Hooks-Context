@@ -1,5 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import Navbar from "./components/layout/Navbar";
+import About from "./components/pages/About";
 import User from "./components/users/User";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
@@ -64,23 +68,37 @@ class App extends Component {
     });
     //console.log(this.state);
   }
+
   render() {
     const { search, users, loading } = this.state;
     return (
-      <div className='App'>
-        {/* Pass a prop from app.js to navbar through a component */}
-        <Navbar />
-        <div className='container'>
-          <Alert alert={this.state.alert} />
-          <Search
-            searchUser={this.searchUser}
-            clearUser={this.clearUser}
-            search={search}
-            setAlert={this.setAlert}
-          />
-          <User users={users} loading={loading} search={search} />
+      <Router>
+        <div className='App'>
+          {/* Pass a prop from app.js to navbar through a component */}
+          <Navbar />
+          <div className='container'>
+            <Alert alert={this.state.alert} />
+            <Switch>
+              <Route
+                exact
+                path='/'
+                render={props => (
+                  <Fragment>
+                    <Search
+                      searchUser={this.searchUser}
+                      clearUser={this.clearUser}
+                      search={search}
+                      setAlert={this.setAlert}
+                    />
+                    <User users={users} loading={loading} search={search} />
+                  </Fragment>
+                )}
+              />
+              <Route exact path='/about' component={About} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
