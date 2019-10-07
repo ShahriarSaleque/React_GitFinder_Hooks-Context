@@ -14,8 +14,11 @@ class App extends Component {
   };
 
   async componentDidMount() {
+    console.log(process.env.REACT_APP_GITHUB_CLIENT_ID);
     this.setState({ loading: true });
-    const res = await fetch("https://api.github.com/users");
+    const res = await fetch(
+      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
     const data = await res.json();
     //After the data has been fetched
     this.setState({
