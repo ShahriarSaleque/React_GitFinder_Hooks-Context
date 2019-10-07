@@ -4,18 +4,22 @@ import PropTypes from "prop-types";
 class Search extends Component {
   //Component-level state is to be here with form
   state = {
-    name: ""
+    name: "",
+    searchName: ""
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = e => {
-    //console.log(this.state);
-    this.setState({ name: "" });
-    this.props.searchUser(this.state.name);
-    e.preventDefault();
+    if (this.state.name === "") {
+      alert("Name field required");
+    } else {
+      //console.log(this.state);
+      this.setState({ name: "" });
+      this.props.searchUser(this.state.name);
+      e.preventDefault();
+    }
   };
-
   static propType = {
     searchUsers: PropTypes.func.isRequired
   };
@@ -37,6 +41,14 @@ class Search extends Component {
             className='btn btn-dark btn-block'
           />
         </form>
+        {this.props.search && (
+          <button
+            className='btn btn-light btn-block'
+            onClick={this.props.clearUser}
+          >
+            Clear
+          </button>
+        )}
       </div>
     );
   }

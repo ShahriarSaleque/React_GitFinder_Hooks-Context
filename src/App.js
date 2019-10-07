@@ -34,6 +34,10 @@ class App extends Component {
     });
   };
 
+  clearUser = () => {
+    this.setState({ users: [], loading: false });
+  };
+
   async componentDidMount() {
     this.setState({ loading: true });
     const res = await fetch(
@@ -55,12 +59,15 @@ class App extends Component {
         {/* Pass a prop from app.js to navbar through a component */}
         <Navbar />
         <div className='container'>
-          <Search searchUser={this.searchUser} />
+          <Search
+            searchUser={this.searchUser}
+            clearUser={this.clearUser}
+            search={this.state.search}
+          />
           <User
             users={this.state.users}
             loading={this.state.loading}
             search={this.state.search}
-            searchName={this.state.searchName}
           />
         </div>
       </div>
