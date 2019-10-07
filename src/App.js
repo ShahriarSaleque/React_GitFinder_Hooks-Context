@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Navbar from "./components/layout/Navbar";
 import User from "./components/users/User";
 import Search from "./components/users/Search";
+import Alert from "./components/layout/Alert";
 import "./App.css";
 
 // Context API = Global store
@@ -13,7 +14,8 @@ class App extends Component {
     loading: false,
     search: false,
     searchName: "",
-    users: {}
+    users: {},
+    alert: null
   };
 
   searchUser = async name => {
@@ -38,6 +40,15 @@ class App extends Component {
     this.setState({ users: [], loading: false });
   };
 
+  setAlert = (msg, type) => {
+    this.setState({ alert: { msg: msg, type: type } });
+    // console.log(this.state.alert);
+
+    setTimeout(() => {
+      this.setState({ alert: null });
+    }, 3000);
+  };
+
   async componentDidMount() {
     this.setState({ loading: true });
     const res = await fetch(
@@ -54,21 +65,20 @@ class App extends Component {
     //console.log(this.state);
   }
   render() {
+    const { search, users, loading } = this.state;
     return (
       <div className='App'>
         {/* Pass a prop from app.js to navbar through a component */}
         <Navbar />
         <div className='container'>
+          <Alert alert={this.state.alert} />
           <Search
             searchUser={this.searchUser}
             clearUser={this.clearUser}
-            search={this.state.search}
+            search={search}
+            setAlert={this.setAlert}
           />
-          <User
-            users={this.state.users}
-            loading={this.state.loading}
-            search={this.state.search}
-          />
+          <User users={users} loading={loading} search={search} />
         </div>
       </div>
     );
