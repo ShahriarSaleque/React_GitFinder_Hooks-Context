@@ -7,13 +7,14 @@ import About from "./components/pages/About";
 import User from "./components/users/User";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
+import UserInfo from "./components/pages/UserInfo";
 import "./App.css";
 
 // Context API = Global store
 // App-level state = used for data needed throughout the app
 
 class App extends Component {
-  //init an app-level state
+  //init an App-level state
   state = {
     loading: false,
     search: false,
@@ -22,6 +23,7 @@ class App extends Component {
     alert: null
   };
 
+  //API call to search a specific user
   searchUser = async name => {
     this.setState({ loading: true });
 
@@ -34,16 +36,33 @@ class App extends Component {
     //After the individual user data has been fetched
     this.setState({
       users: gitnames,
+      user: {},
       search: true,
       searchName: name,
       loading: false
     });
   };
 
+  //API call to get details about a single user
+  getUser = async login => {
+    this.setState({ loading: true });
+
+    const res = await fetch(
+      `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    const user = await res.json();
+
+    this.setState({ user, loading: false });
+
+    //console.log(this.state.user);
+  };
+
+  //Clear all input field
   clearUser = () => {
     this.setState({ users: [], loading: false });
   };
 
+  //Alert notification
   setAlert = (msg, type) => {
     this.setState({ alert: { msg: msg, type: type } });
     // console.log(this.state.alert);
@@ -53,6 +72,7 @@ class App extends Component {
     }, 3000);
   };
 
+  //Bring in random users in the homepage
   async componentDidMount() {
     this.setState({ loading: true });
     const res = await fetch(
@@ -70,11 +90,10 @@ class App extends Component {
   }
 
   render() {
-    const { search, users, loading } = this.state;
+    const { search, users, loading, user } = this.state;
     return (
       <Router>
         <div className='App'>
-          {/* Pass a prop from app.js to navbar through a component */}
           <Navbar />
           <div className='container'>
             <Alert alert={this.state.alert} />
@@ -95,6 +114,18 @@ class App extends Component {
                 )}
               />
               <Route exact path='/about' component={About} />
+              <Route
+                exact
+                path='/users/:login'
+                render={props => (
+                  <UserInfo
+                    {...props}
+                    getUser={this.getUser}
+                    user={user}
+                    loading={loading}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>
