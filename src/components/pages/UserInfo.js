@@ -2,20 +2,25 @@ import React, { Component, Fragment } from "react";
 import Spinner from "../layout/Spinner";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import Repo from "../repos/Repo";
 
 class UserInfo extends Component {
   state = {
-    user: {}
+    user: {},
+    repos: []
   };
 
   async componentDidMount() {
-    const a = await this.props.getUser(this.props.match.params.login);
+    await this.props.getUser(this.props.match.params.login);
     this.setState({ user: this.props.user });
+    await this.props.getRepos(this.props.match.params.login);
+
+    this.setState({ repos: this.props.repos });
   }
 
   static propTypes = {
     loading: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
+
     getUser: PropTypes.func.isRequired
   };
 
@@ -103,6 +108,8 @@ class UserInfo extends Component {
           <div className='badge badge-light'>Public_Repos: {public_repos}</div>
           <div className='badge badge-dark'>Public_Gists: {public_gists}</div>
         </div>
+        <h3>Latest Github Repos-</h3>
+        <Repo repos={this.state.repos} />
       </Fragment>
     );
   }

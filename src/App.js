@@ -9,6 +9,7 @@ import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
 import UserInfo from "./components/pages/UserInfo";
 import "./App.css";
+import axios from "axios";
 
 // Context API = Global store
 // App-level state = used for data needed throughout the app
@@ -23,7 +24,22 @@ class App extends Component {
     alert: null
   };
 
-  //API call to search a specific user
+  //Bring in random users in the homepage
+  async componentDidMount() {
+    this.setState({ loading: true });
+    const res = await fetch(
+      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    const data = await res.json();
+
+    this.setState({
+      users: data,
+      search: false,
+      loading: false
+    });
+  }
+
+  //API call to search and return a list of users
   searchUser = async name => {
     this.setState({ loading: true });
 
@@ -37,6 +53,7 @@ class App extends Component {
     this.setState({
       users: gitnames,
       user: {},
+      repos: [],
       search: true,
       searchName: name,
       loading: false
@@ -53,10 +70,22 @@ class App extends Component {
     const user = await res.json();
 
     this.setState({ user, loading: false });
-
-    //console.log(this.state.user);
   };
 
+  //API call to fetch all the user repos
+  getRepos = async login => {
+    this.setState({ loading: true });
+
+    const res = await axios(
+      `https://api.github.com/users/${login}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+
+    const repos = await res.data;
+
+    this.setState({ repos });
+  };
+
+  //Utilities
   //Clear all input field
   clearUser = () => {
     this.setState({ users: [], loading: false });
@@ -65,32 +94,14 @@ class App extends Component {
   //Alert notification
   setAlert = (msg, type) => {
     this.setState({ alert: { msg: msg, type: type } });
-    // console.log(this.state.alert);
 
     setTimeout(() => {
       this.setState({ alert: null });
     }, 3000);
   };
 
-  //Bring in random users in the homepage
-  async componentDidMount() {
-    this.setState({ loading: true });
-    const res = await fetch(
-      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    const data = await res.json();
-
-    //After the data has been fetched
-    this.setState({
-      users: data,
-      search: false,
-      loading: false
-    });
-    //console.log(this.state);
-  }
-
   render() {
-    const { search, users, loading, user } = this.state;
+    const { search, users, loading, user, repos } = this.state;
     return (
       <Router>
         <div className='App'>
@@ -121,7 +132,9 @@ class App extends Component {
                   <UserInfo
                     {...props}
                     getUser={this.getUser}
+                    getRepos={this.getRepos}
                     user={user}
+                    repos={repos}
                     loading={loading}
                   />
                 )}
