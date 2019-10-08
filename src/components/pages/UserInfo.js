@@ -12,12 +12,11 @@ class UserInfo extends Component {
 
   async componentDidMount() {
     await this.props.getUser(this.props.match.params.login);
+
     this.setState({ user: this.props.user });
     await this.props.getRepos(this.props.match.params.login);
-
     this.setState({ repos: this.props.repos });
   }
-
   static propTypes = {
     loading: PropTypes.bool.isRequired,
 

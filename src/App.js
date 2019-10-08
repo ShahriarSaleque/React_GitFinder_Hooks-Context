@@ -82,7 +82,7 @@ class App extends Component {
 
     const repos = await res.data;
 
-    this.setState({ repos });
+    this.setState({ repos, loading: false });
   };
 
   //Utilities
