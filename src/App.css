@@ -180,6 +180,9 @@ img {
   margin: 0 0.5rem 0 0;
 }
 
+.ml-2 {
+  margin: 0 0 0 0.5rem;
+}
 /* Grid */
 .grid-2 {
   display: grid;
