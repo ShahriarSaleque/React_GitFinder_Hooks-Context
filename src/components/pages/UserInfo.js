@@ -1,29 +1,18 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import Spinner from "../layout/Spinner";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Repo from "../repos/Repo";
 
-class UserInfo extends Component {
-  state = {
-    user: {},
-    repos: []
-  };
+const UserInfo = ({ loading, user, repos, match, getUser, getRepos }) => {
+  useEffect(() => {
+    getUser(match.params.login);
 
-  async componentDidMount() {
-    await this.props.getUser(this.props.match.params.login);
+    getRepos(match.params.login);
+    //eslint-disable-next-line
+  }, []);
 
-    this.setState({ user: this.props.user });
-    await this.props.getRepos(this.props.match.params.login);
-    this.setState({ repos: this.props.repos });
-  }
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-
-    getUser: PropTypes.func.isRequired
-  };
-
-  render() {
+  if (user && repos) {
     const {
       name,
       avatar_url,
@@ -38,9 +27,7 @@ class UserInfo extends Component {
       public_repos,
       public_gists,
       hireable
-    } = this.state.user;
-
-    const { loading } = this.props;
+    } = user;
 
     if (loading) return <Spinner />;
 
@@ -108,10 +95,17 @@ class UserInfo extends Component {
           <div className='badge badge-dark'>Public_Gists: {public_gists}</div>
         </div>
         <h3>Latest Github Repos-</h3>
-        <Repo repos={this.state.repos} />
+        <Repo repos={repos} />
       </Fragment>
     );
+  } else {
+    return <Spinner />;
   }
-}
+};
+
+UserInfo.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  getUser: PropTypes.func.isRequired
+};
 
 export default UserInfo;

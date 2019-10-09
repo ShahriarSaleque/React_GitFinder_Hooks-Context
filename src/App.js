@@ -64,12 +64,12 @@ class App extends Component {
   getUser = async login => {
     this.setState({ loading: true });
 
-    const res = await fetch(
+    const res = await axios(
       `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
-    const user = await res.json();
+    const user = await res.data;
 
-    this.setState({ user, loading: false });
+    await this.setState({ user, loading: false });
   };
 
   //API call to fetch all the user repos
@@ -82,7 +82,7 @@ class App extends Component {
 
     const repos = await res.data;
 
-    this.setState({ repos, loading: false });
+    await this.setState({ repos, loading: false });
   };
 
   //Utilities

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 const Search = ({ clearUser, search, setAlert, searchUser }) => {
-  //Component-level state is to be here with form
   const [name, setName] = useState("");
   const onChange = e => setName(e.target.value);
 
@@ -11,7 +10,6 @@ const Search = ({ clearUser, search, setAlert, searchUser }) => {
     if (name === "") {
       setAlert("Enter a name", "light");
     } else {
-      //console.log(this.state);
       setName("");
       searchUser(name);
     }
