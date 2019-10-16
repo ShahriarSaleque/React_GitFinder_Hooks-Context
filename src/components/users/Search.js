@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 
 import GithubContext from "../../context/github/githubContext";
 
-const Search = ({ clearUser, search, setAlert }) => {
+const Search = ({ setAlert }) => {
   const gitContext = useContext(GithubContext);
+  const { searchUsers, clearUser } = gitContext;
   const [name, setName] = useState("");
   const onChange = e => setName(e.target.value);
 
@@ -28,13 +29,14 @@ const Search = ({ clearUser, search, setAlert }) => {
           value={name}
           onChange={onChange}
         />
+        ,
         <input
           type='submit'
           value='Search'
           className='btn btn-dark btn-block'
         />
       </form>
-      {search && (
+      {searchUsers && (
         <button className='btn btn-light btn-block' onClick={clearUser}>
           Clear
         </button>

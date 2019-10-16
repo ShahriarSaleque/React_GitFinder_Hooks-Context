@@ -39,19 +39,6 @@ const App = () => {
     fetchData();
   }, []);
 
-  //API call to get details about a single user
-  const getUser = async login => {
-    setLoading(true);
-
-    const res = await axios(
-      `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    const user = await res.data;
-
-    setUser(user);
-    setLoading(false);
-  };
-
   //API call to fetch all the user repos
   const getRepos = async login => {
     setLoading(true);
@@ -63,12 +50,6 @@ const App = () => {
     const repos = await res.data;
 
     setRepos(repos);
-    setLoading(false);
-  };
-
-  //Clear all input field
-  const clearUser = () => {
-    setUsers([]);
     setLoading(false);
   };
 
@@ -94,12 +75,8 @@ const App = () => {
                 path='/'
                 render={props => (
                   <Fragment>
-                    <Search
-                      clearUser={clearUser}
-                      search={search}
-                      setAlert={setAlert}
-                    />
-                    <User users={users} loading={loading} search={search} />
+                    <Search setAlert={setAlert} />
+                    <User />
                   </Fragment>
                 )}
               />
@@ -108,14 +85,7 @@ const App = () => {
                 exact
                 path='/users/:login'
                 render={props => (
-                  <UserInfo
-                    {...props}
-                    getUser={getUser}
-                    getRepos={getRepos}
-                    user={user}
-                    repos={repos}
-                    loading={loading}
-                  />
+                  <UserInfo {...props} getRepos={getRepos} repos={repos} />
                 )}
               />
             </Switch>

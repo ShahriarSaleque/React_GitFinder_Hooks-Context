@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import UserItem from "./UserItem";
 import Spinner from "../layout/Spinner";
 import PropTypes from "prop-types";
 
-const User = ({ users, loading }) => {
+import GithubContext from "../../context/github/githubContext";
+
+const User = () => {
+  const gitContext = useContext(GithubContext);
+
+  const { users, loading } = gitContext;
   const userArr = Array.from(users);
 
   if (loading) {
