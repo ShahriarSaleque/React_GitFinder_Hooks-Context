@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -11,43 +11,35 @@ import UserInfo from "./components/users/UserInfo";
 import "./App.css";
 
 import GithubState from "./context/github/GithubState";
+import AlertState from "./context/alert/AlertState";
 
 const App = () => {
-  const [alert, setAlertNotifiy] = useState(null);
-
-  //Alert notification
-  const setAlert = (msg, type) => {
-    setAlertNotifiy({ msg: msg, type: type });
-
-    setTimeout(() => {
-      setAlertNotifiy(null);
-    }, 3000);
-  };
-
   return (
     <GithubState>
-      <Router>
-        <div className='App'>
-          <Navbar />
-          <div className='container'>
-            <Alert alert={alert} />
-            <Switch>
-              <Route
-                exact
-                path='/'
-                render={props => (
-                  <Fragment>
-                    <Search setAlert={setAlert} />
-                    <User />
-                  </Fragment>
-                )}
-              />
-              <Route exact path='/about' component={About} />
-              <Route exact path='/users/:login' component={UserInfo} />
-            </Switch>
+      <AlertState>
+        <Router>
+          <div className='App'>
+            <Navbar />
+            <div className='container'>
+              <Alert />
+              <Switch>
+                <Route
+                  exact
+                  path='/'
+                  render={props => (
+                    <Fragment>
+                      <Search />
+                      <User />
+                    </Fragment>
+                  )}
+                />
+                <Route exact path='/about' component={About} />
+                <Route exact path='/users/:login' component={UserInfo} />
+              </Switch>
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </AlertState>
     </GithubState>
   );
 };
