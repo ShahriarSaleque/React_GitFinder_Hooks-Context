@@ -14,12 +14,27 @@ const GithubState = props => {
   const [state, dispatch] = useReducer(githubReducer, initialState);
 
   //Search Users
+  const searchUsers = async name => {
+    setLoading();
+
+    const res = await fetch(
+      `https://api.github.com/search/users?q=${name}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    const data = await res.json();
+    const gitnames = data.items;
+
+    dispatch({
+      type: SEARCH_USERS,
+      payload: gitnames
+    });
+  };
 
   //Get User
 
   //Get Repos
 
   //SetLoading
+  const setLoading = () => dispatch({ type: SET_LOADING });
 
   return (
     <GithubContext.Provider
@@ -27,7 +42,8 @@ const GithubState = props => {
         users: state.users,
         user: state.user,
         repos: state.repos,
-        loading: state.loading
+        loading: state.loading,
+        searchUsers
       }}
     >
       {props.children}

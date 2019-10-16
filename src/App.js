@@ -39,24 +39,6 @@ const App = () => {
     fetchData();
   }, []);
 
-  //API call to search and return a list of users
-  const searchUser = async name => {
-    setLoading(true);
-
-    const res = await fetch(
-      `https://api.github.com/search/users?q=${name}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    const data = await res.json();
-    const gitnames = data.items;
-
-    setUsers(gitnames);
-    setUser({});
-    setRepos([]);
-    setSearch(true);
-
-    setLoading(false);
-  };
-
   //API call to get details about a single user
   const getUser = async login => {
     setLoading(true);
@@ -113,7 +95,6 @@ const App = () => {
                 render={props => (
                   <Fragment>
                     <Search
-                      searchUser={searchUser}
                       clearUser={clearUser}
                       search={search}
                       setAlert={setAlert}
