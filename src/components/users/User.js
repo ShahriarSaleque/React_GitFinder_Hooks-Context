@@ -24,10 +24,6 @@ const User = () => {
   }
 };
 
-User.propTypes = {
-  loading: PropTypes.bool.isRequired
-};
-
 const userStyle = {
   display: "grid",
   gridTemplateColumns: "repeat(3,1fr)",

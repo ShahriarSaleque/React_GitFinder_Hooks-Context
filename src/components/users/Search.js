@@ -29,7 +29,7 @@ const Search = ({ setAlert }) => {
           value={name}
           onChange={onChange}
         />
-        ,
+
         <input
           type='submit'
           value='Search'

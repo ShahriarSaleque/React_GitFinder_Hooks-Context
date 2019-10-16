@@ -7,7 +7,7 @@ import About from "./components/pages/About";
 import User from "./components/users/User";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
-import UserInfo from "./components/pages/UserInfo";
+import UserInfo from "./components/users/UserInfo";
 import "./App.css";
 import axios from "axios";
 
